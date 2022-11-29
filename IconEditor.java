@@ -15,15 +15,15 @@ public class IconEditor {
         return icon;
     }
 
-    public static ImageIcon resizeIcon(ImageIcon icon, int w, int h){
+    public static ImageIcon resizeIcon(ImageIcon icon, int width, int height){
         Image CGresize = icon.getImage();
-         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2 = resizedImg.createGraphics();
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(CGresize, 0, 0, w, h, null);
-            g2.dispose();
-            ImageIcon resized = new ImageIcon();
-            resized.setImage(resizedImg);
-            return resized;
+        BufferedImage resizedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(CGresize, 0, 0, width, height, null);
+        g2.dispose();
+        ImageIcon resized = new ImageIcon();
+        resized.setImage(resizedImg);
+        return resized;
     }
 }

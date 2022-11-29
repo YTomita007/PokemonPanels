@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,13 +37,11 @@ public class PokemonPanels extends JFrame implements ActionListener{
     JButton button[];               // ボードの生成
     JButton rButton;                // リセットボタン
     JLabel countLabel;              // ラベルの生成
-    StartMenu sm;                   // StartMenu再表示
     String cmd;                     // ActionCommandを格納する変数
     JPanel panel = new JPanel();    // パネルを利用;
-    File imagesDirectory;           // imagesディレクトリ        
-    File[] pokemonPictures;         // ポケモンimageファイル数
     Timer timer;                    // 遅延変数
     TimerTask task;                 // タイマータスク
+    Random rand = new Random();     // 乱数生成
 
     // 開発用に作成（実際のプレーではインスタンス化して使用するのでここから起動しない）
     public static void main(String[] args) {
@@ -110,15 +109,12 @@ public class PokemonPanels extends JFrame implements ActionListener{
         pokemonsCmd.addAll(pokemons1);
         pokemonsCmd.addAll(pokemons2);
 
-        pokemonIcons = new HashMap<String, ImageIcon>();     // pokemon1とpokemon2を結合するための配列
+        pokemonIcons = new HashMap<String, ImageIcon>();     // pokemon1とpokemon2を結合するためのハッシュマップ配列
 
         for(int i = 0 ; i < (pokemonsCmd.size() / 2) ; i++) {
             pokemonIcons.put(pokemons1.get(i), new ImageIcon("./PokemonPanels/images/" + Integer.parseInt(pokemons1.get(i).substring(1)) + ".png"));
             pokemonIcons.put(pokemons2.get(i), new ImageIcon("./PokemonPanels/images/" + Integer.parseInt(pokemons2.get(i).substring(1)) + ".png"));
         }
-
-        imagesDirectory = new File("./PokemonPanels/images/");
-        pokemonPictures = imagesDirectory.listFiles();
 
         for(i=0; i<cell; i++){
             for(j=0;j<cell;j++){
@@ -148,7 +144,7 @@ public class PokemonPanels extends JFrame implements ActionListener{
         button[btnNum].setIcon(null);
     }
 
-    public void delayMethod(int btnNum, int previousBtn){
+    public void delayMethod(int btnNum, int previousBtn, int mmseconds){
         timer = new Timer(false);
 		task = new TimerTask() {
 			@Override
@@ -157,7 +153,7 @@ public class PokemonPanels extends JFrame implements ActionListener{
 				timer.cancel();
 			}
 		};
-		timer.schedule(task, 1000);
+		timer.schedule(task, mmseconds);
     }
 
     @Override
@@ -179,7 +175,7 @@ public class PokemonPanels extends JFrame implements ActionListener{
                         button[previousBtn].setBackground(Color.GRAY);
                         button[btnNum].setBackground(Color.GRAY);
                     }else{
-                        delayMethod(btnNum, previousBtn);
+                        delayMethod(btnNum, previousBtn, 300);
                     }
                     turnFlg = false;
                     break;
