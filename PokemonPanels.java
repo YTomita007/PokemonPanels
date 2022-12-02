@@ -13,9 +13,9 @@ import javax.swing.*;
 
 public class PokemonPanels extends JFrame implements ActionListener{
 
-    final int easy[] = {8, 50};                 // 難易度別{1列のセルの数、セル一辺の長さ}
-    final int normal[] = {16, 45};
-    final int hard[] = {24, 45};
+    final int easy[] = {8, 92};                 // 難易度別{1列のセルの数、セル一辺の長さ}
+    final int normal[] = {16, 46};
+    final int hard[] = {24, 30};
 
     static int inputNum = 2;                    // レベル選択変数
     int btn;                                    // セル番号
@@ -36,6 +36,7 @@ public class PokemonPanels extends JFrame implements ActionListener{
     HashMap<String, ImageIcon> pokemonIcons;    // ポケモンアイコンハッシュマップ
     ImageIcon icons[];                          // ポケモン絵型配列
     JButton button[];                           // ボードの生成
+    JButton aButton;                            // アニメーションボタン
     JButton rButton;                            // リセットボタン
     JLabel countLabel;                          // ラベルの生成
     String cmd;                                 // ActionCommandを格納する変数
@@ -86,6 +87,14 @@ public class PokemonPanels extends JFrame implements ActionListener{
 
     void init(){
         panel.setLayout(null);
+
+        aButton = new JButton();
+        aButton.setBackground(Color.ORANGE);
+        aButton.setBounds(cell * side - 200, 3, 70, 20);
+        aButton.addActionListener(this);
+        aButton.setActionCommand("animation");
+        aButton.setText("animation");
+        panel.add(aButton);
 
         rButton = new JButton();
         rButton.setBackground(Color.ORANGE);
@@ -163,8 +172,10 @@ public class PokemonPanels extends JFrame implements ActionListener{
     }
 
     public void faceDownButton(int btnNum, int previousBtn){
-        button[previousBtn].setIcon(null);
-        button[btnNum].setIcon(null);
+        if(button[btnNum].isEnabled() || button[previousBtn].isEnabled()){
+            button[previousBtn].setIcon(null);
+            button[btnNum].setIcon(null);
+        }
     }
 
     public void delayMethod(int mmseconds){
@@ -196,6 +207,11 @@ public class PokemonPanels extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         cmd = e.getActionCommand();
         // System.out.println("cmd = " + cmd);
+
+        if(cmd.equals("animation")){
+            animation();
+            return;
+        }
 
         if(cmd.equals("reset")){
             new PokemonPanels("PokemonPanels", inputNum);
