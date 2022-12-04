@@ -25,11 +25,11 @@ public class PokemonPanels extends JFrame implements ActionListener{
     int cell;                                   // 1列のセルの数
     int cells;                                  // ボード全てのセルの数
     int side;                                   // セル一辺の長さ
-    int pairCount;                              // ペアカウント
     String previousCmd;                         // 前のコマンド記憶
     int previousBtn;                            // １ターン前のボタン
     int previousPoke;                           // １ターン前のポケモン
     boolean turnFlg;                            // ターン制御フラグ
+    boolean playerFlg;                          // プレイヤー制御フラグ
     ArrayList<String> pokemonsCmd;              // ポケモンコマンド配列
     ArrayList<String> pokemons1;                // ポケモンコマンド配列1
     ArrayList<String> pokemons2;                // ポケモンコマンド配列2
@@ -38,7 +38,9 @@ public class PokemonPanels extends JFrame implements ActionListener{
     JButton button[];                           // ボードの生成
     JButton aButton;                            // アニメーションボタン
     JButton rButton;                            // リセットボタン
-    JLabel countLabel;                          // ラベルの生成
+    JLabel countLabel;                          // カウントラベルの生成
+    int pairCount1;                             // プレイヤー１カウント
+    int pairCount2;                             // プレイヤー２カウント
     String cmd;                                 // ActionCommandを格納する変数
     JPanel panel = new JPanel();                // パネルを利用;
     Timer timer = new Timer(false);   // 遅延変数
@@ -71,7 +73,7 @@ public class PokemonPanels extends JFrame implements ActionListener{
         cells = cell * cell;            // ボード全てのセルの数
         side = level[1];                // セル一辺の長さ
         button = new JButton[cells];    // ボードの生成
-        countLabel = new JLabel("ペアになった数：" + 0);
+        countLabel = new JLabel("プレイヤー１：" + 0 + "\n" + "プレイヤー２：" + 0);
         previousCmd = "";               // 前コマンドの初期化
     
         setTitle(title);
@@ -104,7 +106,10 @@ public class PokemonPanels extends JFrame implements ActionListener{
         rButton.setText("reset");
         panel.add(rButton);
 
-        pairCount = 0;
+        pairCount1 = 0;                         // プレイヤー１カウント初期化
+        pairCount2 = 0;                         // プレイヤー２カウント初期化
+        turnFlg = false;                        // ターン制御フラグ初期化
+        playerFlg = false;                       // プレイヤーフラグ初期化（trueがプレイヤー１の設定）
 
         pokemons1 = new ArrayList<String>();   // ポケモン配置するために必要
         pokemons2 = new ArrayList<String>();   // ポケモン配置するために必要
@@ -178,6 +183,15 @@ public class PokemonPanels extends JFrame implements ActionListener{
         }
     }
 
+    public boolean changeFlg(boolean flg){
+        if(flg){
+            flg = false;
+        }else{
+            flg = true;
+        }
+        return flg;
+    }
+
     public void delayMethod(int mmseconds){
 		TimerTask allCoverTask = new TimerTask() {
 			@Override
@@ -232,17 +246,27 @@ public class PokemonPanels extends JFrame implements ActionListener{
                         button[btnNum].setEnabled(false);
                         button[previousBtn].setBackground(Color.GRAY);
                         button[btnNum].setBackground(Color.GRAY);
-                        pairCount++;
-                        countLabel.setText("ペアになった数：" + pairCount);
+                        if(playerFlg == true){
+                            pairCount1++;
+                        } else {
+                            pairCount2++;
+                        }
+                        countLabel.setText("プレイヤー１：" + pairCount1 +  "\n" + "プレイヤー２：" + pairCount2);
                     }else{
                         delayMethod(btnNum, previousBtn, 300);
                     }
-                    turnFlg = false;
+                    turnFlg = changeFlg(turnFlg);
+                    if(turnFlg == true){
+                        playerFlg = changeFlg(playerFlg);
+                    }
                     break;
                 } else {
                     if(actNum == Integer.parseInt(pokeKey.substring(1))){
                         faceUpButton(btnNum, actNum);
-                        turnFlg = true;
+                        turnFlg = changeFlg(turnFlg);
+                        if(turnFlg == true){
+                            playerFlg = changeFlg(playerFlg);
+                        }
                         break;
                     }
                 }
